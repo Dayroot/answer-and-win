@@ -10,5 +10,10 @@
   },
   "keywords": [],
   "author": "Dallan Cáceres",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "color": "^4.2.3",
+    "enquirer": "^2.3.6",
+    "uuid": "^8.3.2"
+  }
 }
