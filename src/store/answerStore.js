@@ -65,9 +65,6 @@ export class AnswerStore{
      */
     static addAnswer = async (answer) =>{
         try {
-            if( !(answer instanceof Answer)){
-                answer = new Answer(answer.text, answer.question, answer.isCorrect);
-            }
             const data = await this._getAllData();
             const id = answer.getId();
             if( data.hasOwnProperty(id) ) return true;
@@ -83,16 +80,16 @@ export class AnswerStore{
     }
 
     /**
-     * This function is responsible for removing a answer from the database.
-     * @param {Answer|String} answer An object of class Answer or a String with the id of the answer.
-     * @returns {Boolean} Returns true if the answer was successfully removed, otherwise it returns false.
+     * This function is responsible for removing answers from the database.
+     * @param {Array<String>} answer This array contains all the IDs of the answers that will be removed..
+     * @returns {Boolean} Returns true if all answers was successfully removed, otherwise it returns false.
      */
-    static deleteAnswer = async (answer) => {
+    static deleteAnswer = async (idsArray) => {
         try {
             const data = await this._getAllData();
-            const id =  answer instanceof Answer ? answer.getId() : answer;
-            if(!data.hasOwnProperty(id)) return false;
-            delete data[id];
+            for(const id in idsArray){
+                data[id] && delete data[id];
+            }
             return await this._save(data);
         } catch (error) {
             console.error(error);
