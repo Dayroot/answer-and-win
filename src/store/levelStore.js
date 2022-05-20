@@ -63,12 +63,12 @@ export class LevelStore {
             if( !(level instanceof Level)){
                 level = new Level(Number(level.value), Number(level.prize));
             }
-            const data = await this.getAllData();
+            const data = await this._getAllData();
             const id = level.getId();
             if( data.hasOwnProperty(id) ) return true;
             const newLevelData = level.getData();
             data[id] = delete newLevelData.id && newLevelData;
-            const result = await this.save(data);
+            const result = await this._save(data);
             return result;
 
         } catch (error) {
@@ -84,11 +84,11 @@ export class LevelStore {
      */
     static deleteLevel = async (level) => {
         try {
-            const data = await this.getAllData();
+            const data = await this._getAllData();
             const id =  level instanceof Level ? level.getId() : level;
             if(!data.hasOwnProperty(id)) return false;
             delete data[id];
-            return await this.save(data);
+            return await this._save(data);
         } catch (error) {
             console.error(error);
             return false;
@@ -102,7 +102,7 @@ export class LevelStore {
      */
     static getLevel = async (id)  => {
         try {
-            const data = await this.getAllData();
+            const data = await this._getAllData();
             if(!data.hasOwnProperty(id)) return ;
             return this._setModel(data, id);
         } catch (error) {
@@ -116,7 +116,7 @@ export class LevelStore {
      */
     static getAllLevels = async () =>{
         try {
-            const data = await this.getAllData();
+            const data = await this._getAllData();
             const allLevels = [];
             for(const id in data){
                 const level = this._setModel(data, id);
@@ -134,7 +134,7 @@ export class LevelStore {
      * @returns {Level} Return an object of class level whose value is equal to the ireceived as parameter.
      */
     static getLevelByValue = async (value) => {
-        const data = await this.getAllData();
+        const data = await this._getAllData();
         for(const id in data){
             if(Number(data[id].value) === value){
                 return this._setModel(data, id);
