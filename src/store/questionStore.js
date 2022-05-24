@@ -61,16 +61,13 @@ export class QuestionStore{
      */
     static addQuestion = async (question) => {
         try {
-            if( !(question instanceof Question)){
-                question = new Question(question.text, question.category);
-            }
             const data = await this._getAllData();
             const id = question.getId();
             if( data.hasOwnProperty(id) ) return true;
             const newQuestionData = question.getData();
             data[id] = delete newQuestionData.id && newQuestionData;
             const result = await this._save(data);
-            return result && question;
+            return result;
 
         } catch (error) {
             console.error(error);
@@ -80,15 +77,15 @@ export class QuestionStore{
 
     /**
      * This function is responsible for removing a question from the database.
-     * @param {Question|String} question An object of class Question or a String with the id of the question.
+     * @param {Array<String>} question Array with id's of all questions to delete.
      * @returns {Boolean} Returns true if the question was successfully removed, otherwise it returns false.
      */
-    static deleteQuestion = async (question) =>{
+    static deleteQuestion = async (idsArray) =>{
         try {
             const data = await this._getAllData();
-            const id =  question instanceof Question ? question.getId() : question;
-            if(!data.hasOwnProperty(id)) return false;
-            delete data[id];
+            for(const id of idsArray){
+                data[id] && delete data[id];
+            }
             return await this._save(data);
         } catch (error) {
             console.error(error);
