@@ -60,9 +60,6 @@ export class LevelStore {
      */
     static addLevel = async (level) => {
         try {
-            if( !(level instanceof Level)){
-                level = new Level(Number(level.value), Number(level.prize));
-            }
             const data = await this._getAllData();
             const id = level.getId();
             if( data.hasOwnProperty(id) ) return true;
@@ -79,15 +76,15 @@ export class LevelStore {
 
     /**
      * This function is responsible for removing a level from the database.
-     * @param {Level|String} level An object of class Level or a String with the id of the level.
+     * @param {Level|String} idsArray An object of class Level or a String with the id of the level.
      * @returns {Boolean} Returns true if the level was successfully removed, otherwise it returns false.
      */
-    static deleteLevel = async (level) => {
+    static deleteLevel = async (idsArray) => {
         try {
             const data = await this._getAllData();
-            const id =  level instanceof Level ? level.getId() : level;
-            if(!data.hasOwnProperty(id)) return false;
-            delete data[id];
+            for(const id of idsArray){
+                data[id] && delete data[id];
+            }
             return await this._save(data);
         } catch (error) {
             console.error(error);
@@ -98,12 +95,12 @@ export class LevelStore {
     /**
      * This function is responsible for obtaining from the database the level that is registered with the entered id.
      * @param {String} id The level id.
-     * @returns {Level} Returns an object of class level.
+     * @returns {Level|null} Returns an object of class level, or null if not found.
      */
     static getLevel = async (id)  => {
         try {
             const data = await this._getAllData();
-            if(!data.hasOwnProperty(id)) return ;
+            if(!data.hasOwnProperty(id)) return null;
             return this._setModel(data, id);
         } catch (error) {
             console.error(error);
@@ -131,14 +128,19 @@ export class LevelStore {
     /**
      * This method is responsible for searching the database for the requested level and returning it.
      * @param {Number} value This integer represents the value of the difficulty level.
-     * @returns {Level} Return an object of class level whose value is equal to the ireceived as parameter.
+     * @returns {Level|null} Returns the level that matches the provided id or null if not found.
      */
     static getLevelByValue = async (value) => {
-        const data = await this._getAllData();
-        for(const id in data){
-            if(Number(data[id].value) === value){
-                return this._setModel(data, id);
+        try {
+            const data = await this._getAllData();
+            for (const id in data) {
+                if (Number(data[id].value) === value) {
+                    return this._setModel(data, id);
+                }
             }
+            return null;
+        } catch (error) {
+            console.error(error)
         }
     }
 }
