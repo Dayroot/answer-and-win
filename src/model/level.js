@@ -4,9 +4,6 @@ import { v4 as uuidv4} from 'uuid';
  * This class represents the level of difficulty that each category of questions in the game will have.
  */
 export class Level {
-    id;
-    value;
-    prize;
 
     /**
      * @param {Number} value This number represents the difficulty level value of the game.

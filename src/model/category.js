@@ -4,9 +4,6 @@ import { v4 as uuidv4} from 'uuid';
  * Represents the category model to which the questions are assigned.
  */
 export class Category {
-    id;
-    name;
-    level;
 
     /**
      * @param {String} name Category name.

@@ -4,10 +4,6 @@ import { v4 as uuidv4} from 'uuid';
  * This class represents an answer choice for a question in the game.
  */
 export class Answer {
-    id;
-    text;
-    question;
-    isCorrect;
 
     /**
      * @param {String} text Response content text
@@ -57,7 +53,7 @@ export class Answer {
     /**
      * @returns {Boolean} Returns true if the question is correct, otherwise returns false.
      */
-    isCorrect() {
+    getIsCorrect() {
         return this.isCorrect;
     }
 }

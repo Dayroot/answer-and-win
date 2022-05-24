@@ -5,10 +5,6 @@ import { v4 as uuidv4} from 'uuid';
  */
 export class Question {
 
-    id;
-    text;
-    category;
-
     /**
      * @param {String} text Question content.
      * @param {String} category String with the id of the category to which the quesion belongs.
