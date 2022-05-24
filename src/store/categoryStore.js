@@ -60,9 +60,6 @@ export class CategoryStore{
      */
     static addCategory = async (category) => {
         try {
-            if( !(category instanceof Category)){
-                category = new Category(category.name, category.level);
-            }
             const data = await this._getAllData();
             const id = category.getId();
             if( data.hasOwnProperty(id) ) return true;
@@ -79,15 +76,15 @@ export class CategoryStore{
 
     /**
      * This function is responsible for removing a category from the database.
-     * @param {Category|String} category An object of class Category or a String with the id of the category.
+     * @param {Array<String>} category This array contains all the IDs of the categories that will be removed
      * @returns {Boolean} Returns true if the category was successfully removed, otherwise it returns false.
      */
-    static deleteCategory = async (category) => {
+    static deleteCategory = async (idsArray) => {
         try {
             const data =  await this._getAllData();
-            const id = category instanceof Category ? category.getId() : category;
-            if(!data.hasOwnProperty(id)) return false;
-            delete data[id];
+            for(const id of idsArray){
+                data[id] && delete data[id];
+            }
             return  await this._save(data);
         } catch (error) {
             console.error(error);
@@ -100,7 +97,7 @@ export class CategoryStore{
      * @param {String} id The category id.
      * @returns {Category} Returns an object of class category.
      */
-    static getCategory = async (id) =>{
+    static getCategoryById = async (id) =>{
         try {
             const data = await this._getAllData();
             if(!data.hasOwnProperty(id)) return ;
