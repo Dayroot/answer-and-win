@@ -54,7 +54,7 @@ export class PlayerController {
     static _orderPlayers = (players) => {
         return players.sort((player1,player2) => {
             return player1.level === player2.level 
-                    ? player2.time - player1.time 
+                    ? player1.time - player2.time 
                     : player2.level - player1.level;
         });
     };
